@@ -7,43 +7,27 @@ description: kafka go client
 #################################
 ## consumer list
 consumers:
-  consumer:
-    name : --
-    brokers: [""]
-    group: --
-    topics: [""]
-    SASL:
-      enabled: true
-      user: --
-      password: --
-    call:
-      remoteUrl: --
-      QoS:
-        timeout: 30
-        retries: 3
-        commitWhenSuccess: true
+- name: SSP
+  brokers: ["10.125.234.185:9092", "10.125.233.31:9092", "10.125.232.186:9092"]
+  groupId: SSP
+  topics: ["do-ssp-insurance-photo-sit"]
+  SASL:
+    enabled: true
+    user: jZBzcshH
+    password: cYjS1adKkbM2ZC0B
+  remote:
+    remoteUrl: ~
+    QoS:
+      timeout: 30
+      retry: 1
+      commitWhenSuccess: true
+    beat:
+      health: ~
+      rate: 1
 
-#################################
-## producer list
-producers:
-  producer:
-    name: --
-    brokers: [""]
-    topics: [""]
-    SASL:
-      enabled: true
-      user: --
-      password: --
-
-#################################
-http:
-  port: 8090
-  prefix: kafka
-
-#################################
 ## database
 database:
-  host: --
-  catalog:  --
-  userId: --
-  password: --
+  host: 192.186.0.1
+  catalog:  ~
+  userId: ~
+  password: ~

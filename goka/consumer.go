@@ -2,7 +2,6 @@ package goka
 
 import (
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/Shopify/sarama"
@@ -12,12 +11,12 @@ import (
 // ClusterConsumer a cluster consumer
 type ClusterConsumer struct {
 	Brokers []string
-	Group   string
+	GroupID string
 	Topics  []string
 	Config  *cluster.Config
 
 	OnNotificationFunc func(notification *cluster.Notification)
-	OnSuccessFunc      func(c *cluster.Consumer, m *sarama.ConsumerMessage)
+	OnSuccessFunc      func(c *cluster.Consumer, m *sarama.ConsumerMessage) bool
 	OnErrorFunc        func(err error)
 
 	consumer *cluster.Consumer
@@ -30,8 +29,9 @@ func (c *ClusterConsumer) newConsumer() error {
 	}
 	c.Config.Consumer.Return.Errors = true
 	c.Config.Group.Return.Notifications = true
+	c.Config.Consumer.Offsets.Initial = sarama.OffsetNewest //
 
-	cu, err := cluster.NewConsumer(c.Brokers, c.Group, c.Topics, c.Config)
+	cu, err := cluster.NewConsumer(c.Brokers, c.GroupID, c.Topics, c.Config)
 	if err != nil {
 		return err
 	}
@@ -50,22 +50,25 @@ func (c *ClusterConsumer) Poll() error {
 	// listen
 	for {
 		select {
-		case msg, more := <-c.consumer.Messages():
-			if more {
-				fmt.Fprintf(os.Stdout, "%s/%d/%d\t%s\t/%v\n", msg.Topic, msg.Partition, msg.Offset, msg.Value, time.Now())
+		case msg, ok := <-c.consumer.Messages():
+			if ok {
+				fmt.Printf("%v\t %s/%d/%d \t %s\t \n", time.Now(), msg.Topic, msg.Partition, msg.Offset, msg.Value)
+
 				if c.OnSuccessFunc != nil {
 					c.OnSuccessFunc(c.consumer, msg)
 				}
+
+				c.consumer.MarkOffset(msg, "") // 确认消息已成功被消费
 			}
-		case ntf, more := <-c.consumer.Notifications():
-			if more {
+		case ntf, ok := <-c.consumer.Notifications():
+			if ok {
 				sarama.Logger.Printf("Rebalanced: %+v\n", ntf)
 				if c.OnNotificationFunc != nil {
 					c.OnNotificationFunc(ntf)
 				}
 			}
-		case err, more := <-c.consumer.Errors():
-			if more {
+		case err, ok := <-c.consumer.Errors():
+			if ok {
 				sarama.Logger.Printf("Error: %s\n", err.Error())
 				if c.OnErrorFunc != nil {
 					c.OnErrorFunc(err)

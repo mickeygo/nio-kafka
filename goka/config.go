@@ -12,9 +12,7 @@ type (
 		Version     string
 		Author      string
 		Description string
-		Consumers   []*Consumer `yaml:",flow"`
-		Producers   []*Producer `yaml:",flow"`
-		HTTPServer  `yaml:"http"`
+		Consumers   []Consumer `yaml:"consumers,flow"`
 		Database
 	}
 
@@ -22,17 +20,9 @@ type (
 	Consumer struct {
 		Name    string
 		Brokers []string `yaml:",flow"`
-		Group   string
+		GroupID string   `yaml:"groupId"`
 		Topics  []string `yaml:",flow"`
-		SASL
-	}
-
-	// Producer kafka producer
-	Producer struct {
-		Name    string
-		Brokers []string `yaml:",flow"`
-		Topics  []string `yaml:",flow"`
-		SASL
+		SASL    SASL     `yaml:"SASL"`
 	}
 
 	// SASL kafka SASL
@@ -42,10 +32,14 @@ type (
 		Password string
 	}
 
-	// HTTPServer http
-	HTTPServer struct {
-		Port   int16
-		Prefix string
+	// Heartbeat 心跳机制，用于检测 kafka 服务与指定客户端是否保存联通
+	Heartbeat struct {
+		// 用于检查的远端地址
+		HeathURL string
+		// 心跳请求超时时间
+		Timeout int
+		// 心跳频率（秒）
+		Rate int
 	}
 
 	// Database database config
