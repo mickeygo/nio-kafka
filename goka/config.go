@@ -19,10 +19,12 @@ type (
 	// Consumer kafka consumer
 	Consumer struct {
 		Name    string
-		Brokers []string `yaml:",flow"`
-		GroupID string   `yaml:"groupId"`
-		Topics  []string `yaml:",flow"`
-		SASL    SASL     `yaml:"SASL"`
+		Brokers []string  `yaml:",flow"`
+		GroupID string    `yaml:"groupId"`
+		Topics  []string  `yaml:",flow"`
+		SASL    SASL      `yaml:"SASL"`
+		Remote  Remote    `yaml:"remote"`
+		Log     LogConfig `yaml:"log"`
 	}
 
 	// SASL kafka SASL
@@ -32,14 +34,36 @@ type (
 		Password string
 	}
 
+	// Remote 远程调用
+	Remote struct {
+		// 回调地址
+		URL       string
+		QoS       QoS
+		Heartbeat Heartbeat
+	}
+
+	// QoS 服务质量保证
+	QoS struct {
+		// 请求超时时间
+		Timeout uint
+		// 重试次数
+		Retry uint
+	}
+
 	// Heartbeat 心跳机制，用于检测 kafka 服务与指定客户端是否保存联通
 	Heartbeat struct {
 		// 用于检查的远端地址
 		HeathURL string
 		// 心跳请求超时时间
-		Timeout int
+		Timeout uint
 		// 心跳频率（秒）
-		Rate int
+		Rate uint
+	}
+
+	// LogConfig 日志记录
+	LogConfig struct {
+		// 是否记录日志
+		Enabled bool
 	}
 
 	// Database database config

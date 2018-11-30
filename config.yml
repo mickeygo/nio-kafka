@@ -16,14 +16,16 @@ consumers:
     user: jZBzcshH
     password: cYjS1adKkbM2ZC0B
   remote:
-    remoteUrl: ~
+    url: ~
     QoS:
       timeout: 30
       retry: 1
-      commitWhenSuccess: true
-    beat:
-      health: ~
+    heartbeat:
+      healthUrl: ~
+      timeout: 5
       rate: 1
+  log:
+    enabled: true
 
 ## database
 database:
