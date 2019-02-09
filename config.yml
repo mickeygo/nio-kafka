@@ -7,14 +7,14 @@ description: kafka go client
 #################################
 ## consumer list
 consumers:
-- name: SSP
-  brokers: ["10.125.234.185:9092", "10.125.233.31:9092", "10.125.232.186:9092"]
-  groupId: SSP
-  topics: ["do-ssp-insurance-photo-sit"]
+- name: niohome-app
+  brokers: ["10.132.12.11:9092", "10.132.12.7:9092", "10.132.12.8:9092"]
+  groupId: niohome-app-123
+  topics: ["niohome-app"]
   SASL:
     enabled: true
-    user: jZBzcshH
-    password: cYjS1adKkbM2ZC0B
+    user: 9740d9b27d5a
+    password: 1efd388171b8
   remote:
     url: ~
     QoS:
