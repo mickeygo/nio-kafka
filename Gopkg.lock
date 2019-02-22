@@ -2,10 +2,26 @@
 
 
 [[projects]]
+  name = "github.com/BurntSushi/toml"
+  packages = ["."]
+  revision = "3012a1dbe2e4bd1391d42b32f0577cb7bbc7f005"
+  version = "v0.3.1"
+
+[[projects]]
   name = "github.com/Shopify/sarama"
   packages = ["."]
   revision = "a6144ae922fd99dd0ea5046c8137acfb7fab0914"
   version = "v1.18.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/afex/hystrix-go"
+  packages = [
+    "hystrix",
+    "hystrix/metric_collector",
+    "hystrix/rolling"
+  ]
+  revision = "fa1af6a1f4f56e0e50d427fe901cd604d8c6fb8a"
 
 [[projects]]
   name = "github.com/bsm/sarama-cluster"
@@ -58,9 +74,15 @@
   packages = ["."]
   revision = "e2704e165165ec55d062f5919b4b29494e9fa790"
 
+[[projects]]
+  name = "gopkg.in/yaml.v2"
+  packages = ["."]
+  revision = "51d6538a90f86fe93ac480b35f37b2be17fef232"
+  version = "v2.2.2"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "22c1510314a85673f0d9c41b49bf460d3d6ece6858c114d3d608c801d8dd49b6"
+  inputs-digest = "95db040c0c95c539e3bf33b38c519bb9f4e5e57a9bdda351012740efadfa4e66"
   solver-name = "gps-cdcl"
   solver-version = 1

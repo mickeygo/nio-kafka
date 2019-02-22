@@ -1,4 +1,4 @@
-package goka
+package kafka
 
 import (
 	"net/http"
