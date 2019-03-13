@@ -1,0 +1,23 @@
+####################
+##### 设置消费者(集合)
+[[Consumers]]
+name = "demo"
+description = "des"
+brokers = ["11", "22"]
+groupID = "tt_01"
+[Consumers.SASL]
+enabled = true
+user = "gg"
+password = "abc123"
+[[Consumers.Downstreams]]
+topics = ["topic_1"]
+[Consumers.Downstreams.RPC]
+url = "rpc_url"
+
+####################
+#### 设置日志
+
+####################
+#### 设置主机
+[Host]
+host = "127.0.0.1:8088"

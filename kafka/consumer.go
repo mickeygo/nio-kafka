@@ -1,7 +1,6 @@
 package kafka
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/Shopify/sarama"
@@ -15,9 +14,14 @@ type ClusterConsumer struct {
 	Topics  []string
 	Config  *cluster.Config
 
+	// OnNotificationFunc
 	OnNotificationFunc func(notification *cluster.Notification)
-	OnSuccessFunc      func(c *cluster.Consumer, m *sarama.ConsumerMessage) bool
-	OnErrorFunc        func(err error)
+
+	// OnSuccessFunc 当成功接收到消息后会触发该函数
+	OnSuccessFunc func(c *cluster.Consumer, m *sarama.ConsumerMessage) bool
+
+	// OnErrorFunc
+	OnErrorFunc func(err error)
 
 	consumer *cluster.Consumer
 }
@@ -27,6 +31,7 @@ func (c *ClusterConsumer) newConsumer() error {
 	if c.Config == nil {
 		c.Config = cluster.NewConfig()
 	}
+
 	c.Config.Consumer.Return.Errors = true
 	c.Config.Group.Return.Notifications = true
 	c.Config.Consumer.Offsets.Initial = sarama.OffsetNewest //
@@ -47,18 +52,16 @@ func (c *ClusterConsumer) Poll() error {
 		return err
 	}
 
-	// listen
 	for {
 		select {
 		case msg, ok := <-c.consumer.Messages():
 			if ok {
-				fmt.Printf("%v\t %s/%d/%d \t %s\t \n", time.Now(), msg.Topic, msg.Partition, msg.Offset, msg.Value)
-
+				sarama.Logger.Printf("%v\t %s/%d/%d \t %s\t \n", time.Now(), msg.Topic, msg.Partition, msg.Offset, msg.Value)
 				if c.OnSuccessFunc != nil {
 					c.OnSuccessFunc(c.consumer, msg)
 				}
 
-				c.consumer.MarkOffset(msg, "") // 确认消息已成功被消费
+				c.consumer.MarkOffset(msg, "") // ack, ensure the message have been consumered
 			}
 		case ntf, ok := <-c.consumer.Notifications():
 			if ok {

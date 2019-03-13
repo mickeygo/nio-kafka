@@ -1,0 +1,17 @@
+####################
+##### 设置消费者(集合)
+[Consumers]
+ [Consumers.demo]
+ description = ""
+ brokers = ["", ""]
+ groupID = ""
+  [Consumers.demo.SASL]
+  enabled = true
+  user = ""
+  password = ""
+
+
+####################
+#### 设置主机
+[Host]
+host = "27.0.0.1:8088"
